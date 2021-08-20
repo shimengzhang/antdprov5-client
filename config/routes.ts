@@ -25,28 +25,57 @@
     component: './Welcome',
   },
   {
-    path: '/admin',
-    name: 'admin',
-    icon: 'crown',
-    access: 'canAdmin',
+    path: '/admin/401',
+    // name: 'admin',
+    // icon: 'crown',
     component: './Admin',
+  },
+  // {
+  //   path: '/admin',
+  //   name: 'admin',
+  //   icon: 'crown',
+  //   access: 'canAdmin',
+  //   component: './Admin',
+  //   routes: [
+  //     {
+  //       path: '/admin/sub-page',
+  //       name: 'sub-page',
+  //       icon: 'smile',
+  //       component: './Welcome',
+  //     },
+  //     {
+  //       component: './404',
+  //     },
+  //   ],
+  // },
+  {
+    name: 'admin',
+    icon: 'table',
+    path: '/admin',
+    access: 'canAdmin',
+    component: './admin/Users',
     routes: [
       {
-        path: '/admin/sub-page',
-        name: 'sub-page',
-        icon: 'smile',
-        component: './Welcome',
-      },
-      {
-        component: './404',
+        name: 'users',
+        icon: 'user',
+        path: '/admin/users',
+        component: './admin/Users',
       },
     ],
   },
   {
-    name: 'list.table-list',
+    name: 'form',
     icon: 'table',
-    path: '/list',
-    component: './TableList',
+    path: '/form',
+    component: './form/Basic',
+    routes: [
+      {
+        name: 'basic',
+        icon: 'table',
+        path: '/form/basic',
+        component: './form/Basic',
+      },
+    ],
   },
   {
     path: '/',

@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
 import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 import { notification } from 'antd';
+import type { RequestOptionsInit } from 'umi-request';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -29,6 +30,7 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser();
       return msg.data;
     } catch (error) {
+      localStorage.removeItem('token');
       history.push(loginPath);
     }
     return undefined;
@@ -90,16 +92,25 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 const errorHandler = (error: any) => {
   // const { messages } = getIntl(getLocale());
   const { response } = error; // 拦截器返回 data 后，error 里只有 data，没有 response
-  console.log('errorHandler');
-  console.dir(error);
+  // console.log('errorHandler');
+  // console.dir(error);
 
   if (response && response.status !== 200 && response.status !== 422) {
     const { status, url } = response;
-    notification.error({
-      description: `请求错误 ${status}:${url}`,
-      message: '网络异常',
-    });
+    if (status === 401) {
+      notification.error({
+        description: '认证超时，请重新登录',
+        message: '认证超时',
+      });
+      history.push('/user/login');
+    } else {
+      notification.error({
+        description: `请求错误 ${status}:${url}`,
+        message: '网络异常',
+      });
+    }
   }
+
   if (!response) {
     notification.error({
       description: '您的网络发生异常，无法连接服务器 123',
@@ -135,6 +146,7 @@ export const request: RequestConfig = {
   // headers: {
   //   Authorization: `Bearer ${localStorage.getItem('token')}`,
   // },
+  // credentials: 'include',
   requestInterceptors: [authHeaderInterceptor],
   responseInterceptors: [demoResponseInterceptors],
 };

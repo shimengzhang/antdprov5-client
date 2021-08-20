@@ -7,6 +7,7 @@ declare namespace API {
   type CurrentUser = {
     name?: string;
     avatar?: string;
+    isAdmin?: boolean;
     userid?: string;
     email?: string;
     signature?: string;
@@ -40,6 +41,22 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
+  };
+
+  type UsersListItem = {
+    _id?: string;
+    username?: string;
+    password?: string;
+    isAdmin?: boolean;
+    updatedAt?: string;
+    createdAt?: string;
+  };
+
+  type UsersList = {
+    data?: UsersListItem[];
+    /** 列表的内容总数 */
+    total?: number;
+    success?: boolean;
   };
 
   type RuleListItem = {

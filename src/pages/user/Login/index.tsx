@@ -31,7 +31,6 @@ const Login: React.FC = () => {
   const intl = useIntl();
 
   const fetchUserInfo = async () => {
-    console.log(localStorage.getItem('token'));
     const userInfo = await initialState?.fetchUserInfo?.();
     if (userInfo) {
       await setInitialState((s) => ({
@@ -79,7 +78,7 @@ const Login: React.FC = () => {
     }
     setSubmitting(false);
   };
-  const { success, errors, message: errorMessage } = userLoginState;
+  const { success, errors, message: _errorMessage } = userLoginState;
 
   return (
     <div className={styles.container}>

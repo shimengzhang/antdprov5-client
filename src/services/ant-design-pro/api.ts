@@ -60,6 +60,49 @@ export async function rule(
   });
 }
 
+/** 获取用户列表 GET /admin/users */
+export async function queryUsers(
+  params: {
+    // query
+    /** 当前的页码 */
+    current?: number;
+    /** 页面的容量 */
+    pageSize?: number;
+  },
+  sorter?: { [key: string]: any },
+) {
+  console.log('sorter', sorter);
+  return request<API.RuleList>('/admin/users', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(sorter || {}),
+  });
+}
+
+/** 新建用户 POST /admin/users */
+export async function addUser(data?: { [key: string]: any }) {
+  return request<API.UsersListItem>('/admin/users', {
+    method: 'POST',
+    data: {
+      ...data,
+    },
+  });
+}
+/** 修改用户 PUT /admin/users/:id */
+export async function updateUser(options?: { [key: string]: any }) {
+  console.log('update', options);
+  const { username, password, id } = options;
+  return request<API.UsersListItem>(`/admin/users/${id}`, {
+    method: 'PUT',
+    data: {
+      username,
+      password,
+    },
+  });
+}
+
 /** 新建规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
   return request<API.RuleListItem>('/api/rule', {
@@ -70,7 +113,7 @@ export async function updateRule(options?: { [key: string]: any }) {
 
 /** 新建规则 POST /api/rule */
 export async function addRule(options?: { [key: string]: any }) {
-  return request<API.RuleListItem>('/api/rule', {
+  return request<API.RuleListItem>('/admin/users', {
     method: 'POST',
     ...(options || {}),
   });

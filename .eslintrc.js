@@ -5,4 +5,9 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    'no-underscore-dangle': 0,
+    '@typescript-eslint/no-unused-vars': 0,
+    'no-console': 0,
+  },
 };
