@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import {
+  LogoutOutlined,
+  OrderedListOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Avatar, Badge, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
@@ -33,10 +38,16 @@ const loginOut = async () => {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState, setInitialState } = useModel('@@initialState');
+  // @ts-ignore
+  const { count } = useModel('todo');
 
   const onMenuClick = useCallback(
     (event: MenuInfo) => {
       const { key } = event;
+      if (key === 'todo') {
+        history.push('/todo');
+        return;
+      }
       if (key === 'logout') {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
         loginOut();
@@ -84,7 +95,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         </Menu.Item>
       )}
       {menu && <Menu.Divider />}
-
+      <Menu.Item key="todo">
+        <OrderedListOutlined />
+        待办事项<Badge count={count} offset={[10, 0]}></Badge>
+      </Menu.Item>
       <Menu.Item key="logout">
         <LogoutOutlined />
         退出登录
@@ -96,6 +110,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
         <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <Badge count={count} dot></Badge>
       </span>
     </HeaderDropdown>
   );

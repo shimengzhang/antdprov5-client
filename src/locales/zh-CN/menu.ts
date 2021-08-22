@@ -1,5 +1,6 @@
 export default {
   'menu.welcome': '欢迎',
+  'menu.todo': '待办事项',
   'menu.more-blocks': '更多区块',
   'menu.home': '首页',
   'menu.admin': '管理页',

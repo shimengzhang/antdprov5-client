@@ -25,6 +25,12 @@
     component: './Welcome',
   },
   {
+    path: '/todo',
+    name: 'todo',
+    icon: 'OrderedList',
+    component: './Todo',
+  },
+  {
     path: '/admin/401',
     // name: 'admin',
     // icon: 'crown',

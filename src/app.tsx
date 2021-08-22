@@ -124,7 +124,7 @@ const errorHandler = (error: any) => {
 const DOMAIN =
   process.env.NODE_ENV === 'production' ? 'http://localhost:6060' : 'http://localhost:6060';
 
-const demoResponseInterceptors = async (response: Response, options: RequestOptionsInit) => {
+const demoResponseInterceptors = async (response: Response, _options: RequestOptionsInit) => {
   // response.headers.append('interceptors', 'yes yo');
   // const data = await response.clone().json();
   // console.log('data', data);
@@ -140,6 +140,21 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
   };
 };
 
+/**
+ * 请求 url 以 /api/shop/ 开头的，移除 prefix, 走 mock 数据
+ * @param url
+ * @param options
+ * @returns
+ */
+const urlInterceptor = (url: string, options: RequestOptionsInit) => {
+  const index = url.indexOf('/api/shop/');
+
+  return {
+    url: `${index > -1 ? url.slice(index) : url}`,
+    options,
+  };
+};
+
 export const request: RequestConfig = {
   errorHandler, // 在拦截器之后执行
   prefix: `${DOMAIN}/api`,
@@ -147,6 +162,6 @@ export const request: RequestConfig = {
   //   Authorization: `Bearer ${localStorage.getItem('token')}`,
   // },
   // credentials: 'include',
-  requestInterceptors: [authHeaderInterceptor],
+  requestInterceptors: [urlInterceptor, authHeaderInterceptor],
   responseInterceptors: [demoResponseInterceptors],
 };
