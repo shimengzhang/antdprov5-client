@@ -19,22 +19,10 @@
     ],
   },
   {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
-  {
     path: '/todo',
     name: 'todo',
     icon: 'OrderedList',
     component: './Todo',
-  },
-  {
-    path: '/admin/401',
-    // name: 'admin',
-    // icon: 'crown',
-    component: './Admin',
   },
   // {
   //   path: '/admin',
@@ -70,22 +58,7 @@
     ],
   },
   {
-    name: 'form',
-    icon: 'table',
-    path: '/form',
-    component: './form/Basic',
-    routes: [
-      {
-        name: 'basic',
-        icon: 'table',
-        path: '/form/basic',
-        component: './form/Basic',
-      },
-    ],
-  },
-  {
     path: '/',
-    redirect: '/welcome',
   },
   {
     component: './404',

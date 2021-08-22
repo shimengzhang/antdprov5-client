@@ -13,9 +13,9 @@ const Settings: LayoutSettings & {
   fixSiderbar: false,
   splitMenus: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
+  title: '自助埋点系统',
   pwa: false,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+  logo: 'https://m.autohome.com.cn/favicon.ico',
   iconfontUrl: '',
 };
 
