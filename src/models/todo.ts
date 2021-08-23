@@ -5,7 +5,6 @@ export default () => {
   const [data, setData] = useState([]);
   async function fetchData() {
     const resData = await getTodoList();
-    console.log('resData', resData);
 
     setData(resData);
   }

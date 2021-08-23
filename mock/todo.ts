@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 let list = [
   { id: 1, title: '待办 1', status: 0 },
   { id: 2, title: '待办 2', status: 1 },
@@ -11,6 +13,12 @@ let list = [
 
 export default {
   'GET /api/shop/todolist': (req, res) => {
+    // mock 返回异常示例，参见 express 错误处理程序返回错误
+    // res.status(400).json({
+    //   success: false,
+    //   message: '测试 res.json()',
+    //   errors: { todo: 'list 异常' },
+    // });
     res.send(list.sort((a, b) => b.id - a.id));
   },
   'PUT /api/shop/todolist': (req, res) => {

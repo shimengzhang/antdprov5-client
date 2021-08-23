@@ -5,13 +5,14 @@ import {
   SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Badge, Menu, Spin } from 'antd';
+import { Avatar, Badge, Menu, Spin, message } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 // import { outLogin } from '@/services/ant-design-pro/api';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+// import { message } from 'vfile';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -49,8 +50,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         return;
       }
       if (key === 'logout') {
+        const hide = message.loading('退出中...', 0);
         setInitialState((s) => ({ ...s, currentUser: undefined }));
         loginOut();
+        setTimeout(hide, 1000);
         return;
       }
       history.push(`/account/${key}`);

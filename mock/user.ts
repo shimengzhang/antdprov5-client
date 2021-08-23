@@ -9,7 +9,7 @@ const waitTime = (time: number = 100) => {
 };
 
 async function getFakeCaptcha(req: Request, res: Response) {
-  // await waitTime(2000);
+  await waitTime(2000);
   return res.json('captcha-xxx');
 }
 

@@ -19,10 +19,29 @@
     ],
   },
   {
+    path: '/manage',
+    name: 'manage',
+    icon: 'UnorderedList',
+    routes: [
+      {
+        path: '/manage/user',
+        name: 'userManage',
+        icon: 'Team',
+        component: './manage/User',
+      },
+    ],
+  },
+  {
     path: '/todo',
     name: 'todo',
     icon: 'OrderedList',
     component: './Todo',
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    icon: 'dashboard',
+    component: './Dashboard',
   },
   // {
   //   path: '/admin',
@@ -59,6 +78,7 @@
   },
   {
     path: '/',
+    redirect: './dashboard',
   },
   {
     component: './404',

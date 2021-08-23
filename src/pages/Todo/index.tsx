@@ -70,8 +70,6 @@ export default function Todo() {
     },
   ];
 
-  console.log(`data`, data);
-
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -89,7 +87,6 @@ export default function Todo() {
   // };
 
   const handleSubmit = (vals) => {
-    console.log('vals', vals);
     addData(vals);
     setIsModalVisible(false);
   };
