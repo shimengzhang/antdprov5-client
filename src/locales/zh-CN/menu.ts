@@ -5,6 +5,7 @@ export default {
   'menu.home': '首页',
   'menu.manage': '商城管理',
   'menu.manage.userManage': '用户管理',
+  'menu.manage.goodsManage': '商品管理',
   'menu.admin': '管理页',
   'menu.admin.users': '员工管理',
   'menu.admin.sub-page': '二级管理页',

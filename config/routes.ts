@@ -22,12 +22,19 @@
     path: '/manage',
     name: 'manage',
     icon: 'UnorderedList',
+    // component: './manage/User',
     routes: [
       {
         path: '/manage/user',
         name: 'userManage',
         icon: 'Team',
         component: './manage/User',
+      },
+      {
+        path: '/manage/goods',
+        name: 'goodsManage',
+        icon: 'Shopping',
+        component: './manage/Goods',
       },
     ],
   },
