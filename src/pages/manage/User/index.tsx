@@ -1,11 +1,12 @@
 import { PlusOutlined, UserOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable from '@ant-design/pro-table';
-import { Avatar, Button, Switch, message } from 'antd';
+import { Avatar, Button, Switch, message, Radio } from 'antd';
 import { useState, useRef } from 'react';
 import { getUserList, updateUserLock } from '@/services/ant-design-pro/user';
 import Create from './components/Create';
 import Update from './components/Update';
+import styles from './index.less';
 
 export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -13,6 +14,7 @@ export default function Index() {
   const [row, setRow] = useState({});
   const tableRef = useRef(null);
 
+  const [theme, setTheme] = useState(0);
   const showForm = (show) => {
     setIsModalVisible(show);
   };
@@ -73,8 +75,53 @@ export default function Index() {
     },
   ];
 
+  const handleThemeChange = (e) => {
+    const val = +e.target.value;
+    setTheme(val);
+    let styleLink: any = document.getElementById('theme-style');
+    const body = document.getElementsByTagName('body')[0];
+    if (styleLink) {
+      // 假如存在id为theme-style 的link标签，直接修改其href
+      if (val === 1) {
+        styleLink.href = '/theme/theme1.css'; // 切换 ant design 组件主题
+        body.className = 'body-wrap-theme1'; // 切换自定义组件的主题
+      } else if (val === 2) {
+        styleLink.href = '/theme/theme2.css';
+        body.className = 'body-wrap-theme2';
+      } else {
+        styleLink.href = '';
+        body.className = '';
+      }
+    } else {
+      // 不存在的话，则新建一个
+      styleLink = document.createElement('link');
+      styleLink.type = 'text/css';
+      styleLink.rel = 'stylesheet';
+      styleLink.id = 'theme-style';
+      if (val === 1) {
+        styleLink.href = '/theme/theme1.css';
+        body.className = 'body-wrap-theme1';
+      } else if (val === 2) {
+        styleLink.href = '/theme/theme2.css';
+        body.className = 'body-wrap-theme2';
+      } else {
+        styleLink.href = '';
+        body.className = '';
+      }
+      document.body.append(styleLink);
+    }
+  };
+  console.log(`styles`, styles);
   return (
     <PageContainer>
+      <Radio.Group value={theme} onChange={handleThemeChange}>
+        <Radio.Button value="0">Default</Radio.Button>
+        <Radio.Button value="1">theme1</Radio.Button>
+        <Radio.Button value="2">theme2</Radio.Button>
+      </Radio.Group>
+      <br />
+      <div className={styles['common-button']}>测试自定义主题</div>
+      <br />
       <ProTable
         columns={columns}
         request={async (params = {}, sort, filter) => {
