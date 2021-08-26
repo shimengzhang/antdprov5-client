@@ -39,6 +39,20 @@
     ],
   },
   {
+    path: '/comp',
+    name: 'comp',
+    icon: 'Apartment',
+    // component: './manage/User',
+    routes: [
+      {
+        path: '/comp/button',
+        name: 'buttonTest',
+        icon: 'Team',
+        component: './comp/ButtonTest',
+      },
+    ],
+  },
+  {
     path: '/todo',
     name: 'todo',
     icon: 'OrderedList',
