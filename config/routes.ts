@@ -87,13 +87,19 @@
     icon: 'table',
     path: '/admin',
     access: 'canAdmin',
-    component: './admin/Users',
+    // component: './admin/Users',
     routes: [
       {
         name: 'users',
         icon: 'user',
         path: '/admin/users',
         component: './admin/Users',
+      },
+      {
+        name: 'roles',
+        icon: 'user',
+        path: '/admin/roles',
+        component: './admin/Roles',
       },
     ],
   },

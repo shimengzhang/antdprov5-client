@@ -10,6 +10,7 @@ export default {
   'menu.comp.buttonTest': '按钮测试',
   'menu.admin': '管理页',
   'menu.admin.users': '员工管理',
+  'menu.admin.roles': '角色管理',
   'menu.admin.sub-page': '二级管理页',
   'menu.form': '表单页',
   'menu.form.basic': '表单测试一',

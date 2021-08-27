@@ -78,6 +78,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     waterMarkProps: {
       content: initialState?.currentUser?.name,
     },
+    // menuContentRender: ,
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
@@ -150,7 +151,9 @@ const errorHandler = async (error: any) => {
 };
 
 const DOMAIN =
-  process.env.NODE_ENV === 'production' ? 'http://localhost:6060' : 'http://localhost:6060';
+  process.env.NODE_ENV === 'production'
+    ? 'http://localhost:6060'
+    : 'http://antd-server.qiuzhi99.com';
 
 const demoResponseInterceptors = async (response: Response, _options: RequestOptionsInit) => {
   // response.headers.append('interceptors', 'yes yo');

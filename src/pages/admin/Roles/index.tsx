@@ -186,7 +186,7 @@ const TableList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<API.UsersListItem, API.PageParams>
-        headerTitle="员工列表"
+        headerTitle="角色列表"
         actionRef={actionRef}
         rowKey="_id"
         search={{
@@ -238,7 +238,7 @@ const TableList: React.FC = () => {
         </FooterToolbar>
       )}
       <ModalForm
-        title={'新建员工'}
+        title={'新建角色'}
         width="400px"
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
@@ -292,8 +292,6 @@ const TableList: React.FC = () => {
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
-          // console.log('value', value);
-
           const success = await handleUpdate({ ...value });
           if (success) {
             handleUpdateModalVisible(false);
