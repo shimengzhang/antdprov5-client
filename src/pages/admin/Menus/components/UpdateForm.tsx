@@ -3,18 +3,13 @@ import { Modal } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 // import { useIntl } from 'umi';
 // import { Form, Input } from 'antd';
-
-export type FormValueType = {
-  nameCn?: string;
-  name?: string;
-  _id?: string;
-} & Partial<API.UsersListItem>;
+import type { TableListItem } from '../data';
 
 export type UpdateFormProps = {
-  onCancel: (flag?: boolean, formVals?: FormValueType) => void;
-  onSubmit: (values: FormValueType) => Promise<void>;
+  onCancel: (flag?: boolean, formVals?: TableListItem) => void;
+  onSubmit: (values: TableListItem) => Promise<void>;
   updateModalVisible: boolean;
-  values: FormValueType;
+  values: TableListItem;
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
@@ -25,8 +20,9 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       width={640}
       bodyStyle={{ padding: '32px 40px 48px' }}
       destroyOnClose
-      title={'修改角色'}
+      title={'修改菜单'}
       visible={props.updateModalVisible}
+      maskClosable={false}
       footer={false}
       onCancel={() => {
         props.onCancel();
@@ -34,23 +30,31 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
     >
       <ProForm
         initialValues={{
-          ...props.values,
+          path: props.values.path,
+          permission: props.values.permission,
+          name: props.values.name,
+          id: props.values._id,
         }}
         onFinish={async (values) => {
           props.onSubmit(values);
         }}
       >
         <ProFormText
-          label="标识符"
-          name="nameCn"
-          rules={[{ required: true, message: '请输入标识符!' }]}
-        />
-        <ProFormText
           label="名称"
           name="name"
           rules={[{ required: true, message: '请输入名称!' }]}
         />
-        <ProFormText label="false" hidden={true} name="_id" />
+        <ProFormText
+          label="权限"
+          name="permission"
+          rules={[{ required: true, message: '请输入权限!' }]}
+        />
+        <ProFormText
+          label="路径"
+          name="path"
+          rules={[{ required: true, message: '请输入路径!' }]}
+        />
+        <ProFormText label="false" hidden={true} name="id" />
         {/* <Form.Item
           label="用户名"
           name="username"

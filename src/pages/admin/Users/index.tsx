@@ -8,18 +8,18 @@ import ProTable from '@ant-design/pro-table';
 import { ModalForm } from '@ant-design/pro-form';
 import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
-import type { FormValueType } from '@/pages/admin/Users/components/UpdateForm';
 import UpdateForm from '@/pages/admin/Users/components/UpdateForm';
-import { queryUsers, addUser, updateUser, removeRule } from '@/services/ant-design-pro/api';
+import { queryUsers, addUser, updateUser, setRoles } from './service';
 import moment from 'moment';
-import { Form, Input } from 'antd';
-
+import { Form, Input, Divider } from 'antd';
+import type { TableListItem } from './data';
+import RoleForm from './components/RoleForm';
 /**
  * @en-US Add node
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.UsersListItem) => {
+const handleAdd = async (fields: TableListItem) => {
   const hide = message.loading('正在添加');
   console.log(`fields`, fields);
   try {
@@ -40,7 +40,7 @@ const handleAdd = async (fields: API.UsersListItem) => {
  *
  * @param fields
  */
-const handleUpdate = async (fields: FormValueType) => {
+const handleUpdate = async (fields: TableListItem) => {
   console.log(`fields`, fields);
   const hide = message.loading('正在更新');
   try {
@@ -59,18 +59,43 @@ const handleUpdate = async (fields: FormValueType) => {
 };
 
 /**
+ * @en-US Update node
+ * @zh-CN 分配角色
+ *
+ * @param fields
+ */
+const handleRoles = async (fields: TableListItem) => {
+  console.log(`fields`, fields);
+  const hide = message.loading('正在分配');
+  try {
+    await setRoles({
+      ...fields,
+    });
+    hide();
+
+    message.success('分配成功');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('分配失败，请重试!');
+    return false;
+  }
+};
+
+/**
  *  Delete node
  * @zh-CN 删除节点
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.UsersListItem[]) => {
+const handleRemove = async (selectedRows: TableListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    await removeRule({
-      key: selectedRows.map((row) => row._id),
-    });
+    // 删除功能未实现
+    // await removeRule({
+    //   key: selectedRows.map((row) => row._id),
+    // });
     hide();
     message.success('删除成功，会很快刷新');
     return true;
@@ -92,12 +117,14 @@ const TableList: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
+  const [updateRoleModalVisible, handleUpdateRoleModalVisible] = useState<boolean>(false);
 
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.UsersListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.UsersListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<TableListItem>();
+  const [currentRowRole, setCurrentRowRole] = useState<TableListItem>();
+  const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
 
   /**
    * @en-US International configuration
@@ -105,9 +132,9 @@ const TableList: React.FC = () => {
    * */
   // const intl = useIntl();
 
-  const columns: ProColumns<API.UsersListItem>[] = [
+  const columns: ProColumns<TableListItem>[] = [
     {
-      title: '用户名1',
+      title: '用户名',
       dataIndex: 'username',
       tip: '用户名是唯一的 key',
       formItemProps: {
@@ -132,6 +159,12 @@ const TableList: React.FC = () => {
       },
     },
     {
+      title: '角色',
+      dataIndex: 'roles',
+      hideInForm: true,
+      renderText: (roles) => roles.map((role) => role.nameCn).join(','),
+    },
+    {
       title: '是否是超级管理员',
       dataIndex: 'isAdmin',
       renderText: (val) => (val ? '是' : '否'),
@@ -143,7 +176,6 @@ const TableList: React.FC = () => {
         false: { text: '否' },
       },
     },
-
     {
       title: '更新时间',
       sorter: false,
@@ -164,20 +196,29 @@ const TableList: React.FC = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => [
-        <a
-          key="config"
-          onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          修改
-        </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          订阅警报
-        </a>,
-      ],
+      render: (_, record) => (
+        <>
+          <a
+            key="config"
+            onClick={() => {
+              handleUpdateModalVisible(true);
+              setCurrentRow(record);
+            }}
+          >
+            修改
+          </a>
+          <Divider type="vertical" />
+          <a
+            key="role"
+            onClick={() => {
+              handleUpdateRoleModalVisible(true);
+              setCurrentRowRole(record);
+            }}
+          >
+            分配角色
+          </a>
+        </>
+      ),
     },
   ];
 
@@ -185,7 +226,7 @@ const TableList: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.UsersListItem, API.PageParams>
+      <ProTable<TableListItem, API.PageParams>
         headerTitle="员工列表"
         actionRef={actionRef}
         rowKey="_id"
@@ -193,7 +234,7 @@ const TableList: React.FC = () => {
           labelWidth: 120,
         }}
         // search={false}
-        pagination={{ defaultPageSize: 2 }}
+        pagination={{ defaultPageSize: 10 }}
         // pagination={false}
         toolBarRender={() => [
           access.canCreate && (
@@ -243,7 +284,7 @@ const TableList: React.FC = () => {
         visible={createModalVisible}
         onVisibleChange={handleModalVisible}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.UsersListItem);
+          const success = await handleAdd(value as TableListItem);
           if (success) {
             handleModalVisible(false);
             if (actionRef.current) {
@@ -292,8 +333,6 @@ const TableList: React.FC = () => {
       </ModalForm>
       <UpdateForm
         onSubmit={async (value) => {
-          // console.log('value', value);
-
           const success = await handleUpdate({ ...value });
           if (success) {
             handleUpdateModalVisible(false);
@@ -312,6 +351,26 @@ const TableList: React.FC = () => {
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
       />
+      <RoleForm
+        onSubmit={async (value) => {
+          const success = await handleRoles({ ...value });
+          if (success) {
+            handleUpdateRoleModalVisible(false);
+            setCurrentRowRole(undefined);
+            if (actionRef.current) {
+              actionRef.current.reload();
+            }
+          }
+        }}
+        onCancel={() => {
+          handleUpdateRoleModalVisible(false);
+          if (!showDetail) {
+            setCurrentRowRole(undefined);
+          }
+        }}
+        updateRoleModalVisible={updateRoleModalVisible}
+        values={currentRowRole || {}}
+      />
 
       <Drawer
         width={600}
@@ -323,7 +382,7 @@ const TableList: React.FC = () => {
         closable={false}
       >
         {currentRow?.username && (
-          <ProDescriptions<API.UsersListItem>
+          <ProDescriptions<TableListItem>
             column={2}
             title={`${currentRow?.username}的详情`}
             request={async () => ({
@@ -332,7 +391,7 @@ const TableList: React.FC = () => {
             params={{
               id: currentRow?._id,
             }}
-            columns={columns as ProDescriptionsItemProps<API.UsersListItem>[]}
+            columns={columns as ProDescriptionsItemProps<TableListItem>[]}
           />
         )}
       </Drawer>

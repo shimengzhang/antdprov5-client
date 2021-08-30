@@ -101,6 +101,18 @@
         path: '/admin/roles',
         component: './admin/Roles',
       },
+      {
+        name: 'permissions',
+        icon: 'user',
+        path: '/admin/permissions',
+        component: './admin/Permissions',
+      },
+      {
+        name: 'menus',
+        icon: 'user',
+        path: '/admin/menus',
+        component: './admin/Menus',
+      },
     ],
   },
   {

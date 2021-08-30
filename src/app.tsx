@@ -32,6 +32,11 @@ const codeMessage = {
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
+const goLogin = () => {
+  // history.push(`${loginPath}?redirect=${window.location.href}`);
+  window.location.href = `${loginPath}?redirect=${window.location.href}`;
+};
+
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
   loading: <PageLoading />,
@@ -51,7 +56,8 @@ export async function getInitialState(): Promise<{
       return msg.data;
     } catch (error) {
       localStorage.removeItem('token');
-      history.push(loginPath);
+      // history.push(loginPath);
+      goLogin();
     }
     return undefined;
   };
@@ -84,7 +90,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
       const { location } = history;
       // 如果没有登录，重定向到 login
       if (!initialState?.currentUser && location.pathname !== loginPath) {
-        history.push(loginPath);
+        // history.push(loginPath);
+        goLogin();
       }
     },
     links: isDev
@@ -137,7 +144,8 @@ const errorHandler = async (error: any) => {
 
     if (status === 401) {
       message.error('认证超时，请重新登录');
-      history.push('/user/login');
+      // history.push('/user/login');
+      goLogin();
     }
 
     message.error(`请求错误 ${status}:${errorText}`);
@@ -151,9 +159,8 @@ const errorHandler = async (error: any) => {
 };
 
 const DOMAIN =
-  process.env.NODE_ENV === 'production'
-    ? 'http://localhost:6060'
-    : 'http://antd-server.qiuzhi99.com';
+  process.env.NODE_ENV === 'production' ? 'http://localhost:6060' : 'http://localhost:6060';
+// : 'http://antd-server.qiuzhi99.com';
 
 const demoResponseInterceptors = async (response: Response, _options: RequestOptionsInit) => {
   // response.headers.append('interceptors', 'yes yo');

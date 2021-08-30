@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, message, Drawer, Divider } from 'antd';
+import { Button, message, Drawer } from 'antd';
 import React, { useState, useRef } from 'react';
 import { FormattedMessage, useAccess } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
@@ -12,10 +12,9 @@ import UpdateForm from './components/UpdateForm';
 // import { addUser, updateUser, removeRule } from '@/services/ant-design-pro/api';
 import moment from 'moment';
 // import { Form, Input } from 'antd';
-import { queryRoles, addRole, updateRole, updatePermissions } from './service';
+import { queryPermissions, addPermission, updatePermission } from './service';
 import CreateForm from './components/CreateForm';
 import type { TableListItem } from './data';
-import PermissionForm from './components/PermissionForm';
 
 /**
  * @en-US Add node
@@ -26,7 +25,7 @@ const handleAdd = async (fields: TableListItem) => {
   const hide = message.loading('正在添加');
   console.log(`fields`, fields);
   try {
-    await addRole({ ...fields });
+    await addPermission({ ...fields });
     hide();
     message.success('添加成功');
     return true;
@@ -47,7 +46,7 @@ const handleUpdate = async (fields: TableListItem) => {
   console.log(`fields`, fields);
   const hide = message.loading('正在更新');
   try {
-    await updateRole({
+    await updatePermission({
       ...fields,
     });
     hide();
@@ -62,30 +61,6 @@ const handleUpdate = async (fields: TableListItem) => {
 };
 
 /**
- * @en-US Update node
- * @zh-CN 给角色分配权限
- *
- * @param fields
- */
-const handlePermissions = async (fields: TableListItem) => {
-  console.log(`fields`, fields);
-  const hide = message.loading('正在分配');
-  try {
-    await updatePermissions({
-      ...fields,
-    });
-    hide();
-
-    message.success('分配成功');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('分配失败，请重试!');
-    return false;
-  }
-};
-
-/**
  *  Delete node
  * @zh-CN 删除节点
  *
@@ -95,7 +70,7 @@ const handleRemove = async (selectedRows: TableListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    // 删除功能，未实现
+    // 删除功能未实现
     // await removeRule({
     //   key: selectedRows.map((row) => row._id),
     // });
@@ -120,14 +95,11 @@ const TableList: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-  const [updatePermissionModalVisible, handleUpdatePermissionModalVisible] =
-    useState<boolean>(false);
 
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<TableListItem>();
-  const [currentPermissionRow, setCurrentPermissionRow] = useState<TableListItem>();
   const [selectedRowsState, setSelectedRows] = useState<TableListItem[]>([]);
 
   /**
@@ -187,12 +159,6 @@ const TableList: React.FC = () => {
       },
     },
     {
-      title: '权限列表',
-      dataIndex: 'permissions',
-      hideInForm: true,
-      renderText: (permissions) => permissions.map((p) => p.nameCn).join(','),
-    },
-    {
       title: '创建时间',
       sorter: true,
       hideInForm: true,
@@ -204,29 +170,20 @@ const TableList: React.FC = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => (
-        <>
-          <a
-            key="config"
-            onClick={() => {
-              handleUpdateModalVisible(true);
-              setCurrentRow(record);
-            }}
-          >
-            修改
-          </a>
-          <Divider type="vertical" />
-          <a
-            key="role"
-            onClick={() => {
-              handleUpdatePermissionModalVisible(true);
-              setCurrentPermissionRow(record);
-            }}
-          >
-            分配权限
-          </a>
-        </>
-      ),
+      render: (_, record) => [
+        <a
+          key="config"
+          onClick={() => {
+            handleUpdateModalVisible(true);
+            setCurrentRow(record);
+          }}
+        >
+          修改
+        </a>,
+        <a key="subscribeAlert" href="https://procomponents.ant.design/">
+          订阅警报
+        </a>,
+      ],
     },
   ];
 
@@ -235,15 +192,15 @@ const TableList: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<TableListItem>
-        headerTitle="角色列表"
+        headerTitle="权限列表"
         actionRef={actionRef}
         rowKey="_id"
         // search={{
         //   labelWidth: 120,
         // }}
         search={false}
-        // pagination={{ defaultPageSize: 2 }}
-        pagination={false}
+        pagination={{ defaultPageSize: 2 }}
+        // pagination={false}
         toolBarRender={() => [
           access.canCreate && (
             <Button
@@ -257,7 +214,7 @@ const TableList: React.FC = () => {
             </Button>
           ),
         ]}
-        request={(params, sorter, filter) => queryRoles({ ...params, sorter, filter })}
+        request={(params, sorter, filter) => queryPermissions({ ...params, sorter, filter })}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -353,26 +310,6 @@ const TableList: React.FC = () => {
         }}
         updateModalVisible={updateModalVisible}
         values={currentRow || {}}
-      />
-      <PermissionForm
-        onSubmit={async (value) => {
-          const success = await handlePermissions({ ...value });
-          if (success) {
-            handleUpdatePermissionModalVisible(false);
-            setCurrentPermissionRow(undefined);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          handleUpdatePermissionModalVisible(false);
-          if (!showDetail) {
-            setCurrentPermissionRow(undefined);
-          }
-        }}
-        updateModalVisible={updatePermissionModalVisible}
-        values={currentPermissionRow || {}}
       />
 
       <Drawer
