@@ -1,9 +1,8 @@
-import React from 'react';
-import { Modal } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, Select } from 'antd';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-// import { useIntl } from 'umi';
-// import { Form, Input } from 'antd';
 import type { TableListItem } from '../data';
+import { request } from 'umi';
 
 export type UpdateFormProps = {
   onCancel: (flag?: boolean, formVals?: TableListItem) => void;
@@ -13,7 +12,19 @@ export type UpdateFormProps = {
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {
-  // const intl = useIntl();
+  const { updateModalVisible } = props;
+  const [menus, setMenus] = useState([]);
+  useEffect(() => {
+    async function getMenus() {
+      if (updateModalVisible) {
+        const response = await request('/admin/menus/selectMenus');
+        if (response.success) {
+          setMenus(response.data);
+        }
+      }
+    }
+    getMenus();
+  }, [updateModalVisible]);
   console.log(`props`, props);
   return (
     <Modal
@@ -21,7 +32,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
       bodyStyle={{ padding: '32px 40px 48px' }}
       destroyOnClose
       title={'修改菜单'}
-      visible={props.updateModalVisible}
+      visible={updateModalVisible}
       maskClosable={false}
       footer={false}
       onCancel={() => {
@@ -30,10 +41,7 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
     >
       <ProForm
         initialValues={{
-          path: props.values.path,
-          permission: props.values.permission,
-          name: props.values.name,
-          id: props.values._id,
+          ...props.values,
         }}
         onFinish={async (values) => {
           props.onSubmit(values);
@@ -45,6 +53,11 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           rules={[{ required: true, message: '请输入名称!' }]}
         />
         <ProFormText
+          label="描述"
+          name="nameCn"
+          rules={[{ required: true, message: '请输入描述!' }]}
+        />
+        <ProFormText
           label="权限"
           name="permission"
           rules={[{ required: true, message: '请输入权限!' }]}
@@ -54,7 +67,16 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           name="path"
           rules={[{ required: true, message: '请输入路径!' }]}
         />
-        <ProFormText label="false" hidden={true} name="id" />
+        <Form.Item label="父类" name="parentId">
+          <Select allowClear placeholder="请选择父类菜单">
+            {menus.map(({ _id, name }) => (
+              <Select.Option key={_id} value={_id}>
+                {name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <ProFormText label="false" hidden={true} name="_id" />
         {/* <Form.Item
           label="用户名"
           name="username"

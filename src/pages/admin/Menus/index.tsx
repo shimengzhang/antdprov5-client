@@ -135,6 +135,15 @@ const TableList: React.FC = () => {
       },
     },
     {
+      title: '中文描述',
+      dataIndex: 'nameCn',
+    },
+    {
+      title: '父类菜单',
+      dataIndex: 'parent',
+      renderText: (menu) => menu && menu.name,
+    },
+    {
       title: '路径',
       dataIndex: 'path',
       formItemProps: {

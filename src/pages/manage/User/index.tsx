@@ -73,7 +73,7 @@ export default function Index() {
     },
   ];
 
-  console.log(`styles`, styles);
+  // console.log(`styles`, styles);
   return (
     <PageContainer>
       <ProTable

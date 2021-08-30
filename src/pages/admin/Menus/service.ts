@@ -26,8 +26,8 @@ export async function addMenu(data?: { [key: string]: any }) {
 /** 修改角色 PUT /admin/menus/:id */
 export async function updateMenu(options?: { [key: string]: any }) {
   console.log('update', options);
-  const { id, ...data } = options;
-  return request<TableListItem>(`/admin/menus/${id}`, {
+  const { _id, ...data } = options;
+  return request<TableListItem>(`/admin/menus/${_id}`, {
     method: 'PUT',
     data,
   });

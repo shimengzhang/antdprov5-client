@@ -1,4 +1,4 @@
-import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
+import type { MenuDataItem, Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import type { RunTimeLayoutConfig, RequestConfig } from 'umi';
 import { history, Link } from 'umi';
@@ -48,6 +48,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  menuData: MenuDataItem;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
   const fetchUserInfo = async () => {
@@ -61,17 +62,40 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  const fetchMenuData = async () => {
+    return [
+      {
+        name: '员工管理',
+        path: '/admin/users',
+        children: [
+          { name: '菜单管理', path: '/admin/menus' },
+          { name: '权限管理', path: '/admin/permissions' },
+        ],
+      },
+      {
+        name: '角色管理',
+        path: '/admin/roles',
+        // children: [
+        //   { name: '员工一', path: '/admin/menus' },
+        //   { name: '员工二', path: '/admin/permissions' },
+        // ],
+      },
+    ];
+  };
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const menuData = await fetchMenuData();
     return {
       fetchUserInfo,
       currentUser,
+      menuData,
       settings: {},
     };
   }
   return {
     fetchUserInfo,
+    menuData: [],
     settings: {},
   };
 }
@@ -93,6 +117,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         // history.push(loginPath);
         goLogin();
       }
+    },
+    menu: {
+      // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
+      params: initialState,
+      request: async (params, defaultMenuData) => {
+        return initialState.menuData;
+      },
     },
     links: isDev
       ? [
