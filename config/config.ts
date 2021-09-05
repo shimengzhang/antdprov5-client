@@ -13,6 +13,9 @@ export default defineConfig({
   define: {
     MY_TEST_ENV: MY_TEST_ENV || 'everybody',
   },
+  devServer: {
+    port: 8001,
+  },
   hash: true,
   antd: {},
   dva: {

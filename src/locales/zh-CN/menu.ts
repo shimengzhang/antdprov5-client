@@ -6,6 +6,8 @@ export default {
   'menu.manage': '商城管理',
   'menu.manage.userManage': '用户管理',
   'menu.manage.goodsManage': '商品管理',
+  'menu.demo': '试验项目',
+  'menu.demo.stepForm': '分步表单',
   'menu.comp': '组件测试',
   'menu.comp.buttonTest': '按钮测试',
   'menu.admin': '管理页',

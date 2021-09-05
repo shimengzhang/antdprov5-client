@@ -19,6 +19,19 @@
     ],
   },
   {
+    path: '/demo',
+    name: 'demo',
+    icon: 'UnorderedList',
+    routes: [
+      {
+        path: '/demo/stepForm',
+        name: 'stepForm',
+        icon: 'Form',
+        component: './demo/StepForm',
+      },
+    ],
+  },
+  {
     path: '/manage',
     name: 'manage',
     icon: 'UnorderedList',
