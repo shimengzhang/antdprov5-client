@@ -118,13 +118,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
         goLogin();
       }
     },
-    menu: {
-      // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
-      params: initialState,
-      request: async (params, defaultMenuData) => {
-        return initialState.menuData;
-      },
-    },
+    // menu: {
+    //   // 每当 initialState?.currentUser?.userid 发生修改时重新执行 request
+    //   params: initialState,
+    //   request: async (params, defaultMenuData) => {
+    //     return initialState.menuData;
+    //   },
+    // },
     links: isDev
       ? [
           <Link to="/umi/plugin/openapi" target="_blank">

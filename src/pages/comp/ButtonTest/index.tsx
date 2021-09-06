@@ -20,24 +20,6 @@ const Index = () => {
   console.log(blue);
   return (
     <div>
-      <Card title="基础按钮">
-        <Button style={{ background: blue[6] }}>Primary Button</Button>
-        <Button>Default Button</Button>
-        <Button type="dashed">Dashed Button</Button>
-
-        <Button danger>danger Button</Button>
-        <Button disabled>disabled Button</Button>
-      </Card>
-      <Card title="图形按钮">
-        <Button type="primary" icon={<PlusOutlined />}>
-          创建
-        </Button>
-        <Button icon={<EditOutlined />}>编辑</Button>
-        <Button icon={<DeleteOutlined />}>删除</Button>
-        <Button type="primary" shape="circle" icon={<SearchOutlined />}></Button>
-        <Button icon={<SearchOutlined />}>搜索</Button>
-        <Button icon={<DownloadOutlined />}>下载</Button>
-      </Card>
       <Card title="Loading 按钮">
         <Button type="primary" onClick={() => setLoading(!loading)}>
           Loading

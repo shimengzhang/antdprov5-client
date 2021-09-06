@@ -18,6 +18,9 @@ export default defineConfig({
   dva: {
     hmr: true,
   },
+  devServer: {
+    port: 9000,
+  },
   layout: {
     // https://umijs.org/zh-CN/plugins/plugin-layout
     locale: true,
